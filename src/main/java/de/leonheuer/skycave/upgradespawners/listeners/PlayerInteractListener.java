@@ -30,10 +30,7 @@ public class PlayerInteractListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(@NotNull PlayerInteractEvent event) {
-        if (event.getHand() != EquipmentSlot.HAND) {
-            return;
-        }
-        if (event.getAction() != Action.LEFT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_BLOCK) {
+        if (event.getHand() != EquipmentSlot.HAND || event.getAction() != Action.RIGHT_CLICK_BLOCK) {
             return;
         }
         Block block = event.getClickedBlock();
@@ -57,14 +54,22 @@ public class PlayerInteractListener implements Listener {
             return;
         }
 
-        GUIPattern pattern = GUIPattern.ofPattern("bbbbbbbbb", "_________", "bbbbbbbbb")
+        GUIPattern pattern = GUIPattern.ofPattern("bbbbbbbbb", "bbbbbbbbb", "bbbbbbbbb")
                 .withMaterial('b', ItemBuilder.of(Material.BLACK_STAINED_GLASS_PANE).name("§0").asItem())
                 .withMaterial('_', null)
                 .startAtLine(1);
         main.getGuiFactory().createGUI(3, "§6§lLevelbarer Spawner")
                 .formatPattern(pattern)
+                .setItem(2, 2, ItemBuilder.of(Material.BLAZE_POWDER)
+                        .name("&6Treibstoff")
+                        .description("&7Verbleibende Zeit: &b" + spawner.getFuelSeconds() + " Sek.").asItem())
+                .setItem(2, 3, ItemBuilder.of(spawner.getEntity().getIcon())
+                        .name("&6Entity: &e" + spawner.getEntity().getName()).asItem())
+                .setItem(2, 4, ItemBuilder.of(Material.IRON_SWORD)
+                        .name("&6Instant Kill: " + (spawner.isInstantKill() ? "&aan" : "&caus")).asItem())
                 .show(event.getPlayer());
-        event.setUseInteractedBlock(Event.Result.ALLOW);
+        event.setCancelled(true);
+        event.setUseInteractedBlock(Event.Result.DENY);
         event.setUseItemInHand(Event.Result.DENY);
     }
 

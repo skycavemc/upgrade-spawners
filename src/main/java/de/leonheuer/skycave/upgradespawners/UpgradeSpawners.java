@@ -12,6 +12,7 @@ import de.leonheuer.skycave.upgradespawners.codecs.LocationCodec;
 import de.leonheuer.skycave.upgradespawners.codecs.SpawnerCodecProvider;
 import de.leonheuer.skycave.upgradespawners.codecs.UUIDCodec;
 import de.leonheuer.skycave.upgradespawners.commands.SpawnerCommand;
+import de.leonheuer.skycave.upgradespawners.listeners.BlockBreakListener;
 import de.leonheuer.skycave.upgradespawners.listeners.BlockPlaceListener;
 import de.leonheuer.skycave.upgradespawners.listeners.PlayerInteractListener;
 import de.leonheuer.skycave.upgradespawners.models.SkyCavePlugin;
@@ -46,7 +47,8 @@ public final class UpgradeSpawners extends SkyCavePlugin {
         // listeners
         registerEvents(
                 new BlockPlaceListener(this),
-                new PlayerInteractListener(this)
+                new PlayerInteractListener(this),
+                new BlockBreakListener(this)
         );
 
         // commands
