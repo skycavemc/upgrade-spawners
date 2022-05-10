@@ -1,5 +1,6 @@
 package de.leonheuer.skycave.upgradespawners.codecs;
 
+import org.apache.commons.lang.Validate;
 import org.bson.BsonReader;
 import org.bson.BsonType;
 import org.bson.BsonWriter;
@@ -34,7 +35,12 @@ public class LocationCodec implements Codec<Location> {
     }
 
     @Override
-    public void encode(@NotNull BsonWriter writer, @NotNull Location value, EncoderContext encoderContext) {
+    public void encode(@NotNull BsonWriter writer, Location value, EncoderContext encoderContext) {
+        if (value == null) {
+            writer.writeNull();
+            return;
+        }
+
         writer.writeStartDocument();
         writer.writeName("world");
         writer.writeString(value.getWorld().getUID().toString());

@@ -9,6 +9,10 @@ import org.jetbrains.annotations.NotNull;
 public enum Message {
 
     PLACE("&7Du hast einen &aLevelbaren Spawner &7platziert."),
+    NO_PLAYER("&cDu musst ein Spieler sein."),
+    NO_OWNER("&cDu besitzt diesen Spawner nicht. &7Er gehört %player."),
+    MUST_SNEAK("&cSneaken + Abbauen, um den Levelbaren Spawner abzubauen."),
+    BREAK_SUCCESS("&aDu hast den Levelbaren Spawner erfolgreich abgebaut. &7Er wurde in dein Inventar gelegt."),
     ;
 
     private final String string;

@@ -2,5 +2,9 @@ name: UpgradeSpawners
 version: '${version}'
 main: de.leonheuer.skycave.upgradespawners.UpgradeSpawners
 api-version: 1.18
-depend: [ Vault ]
+depend: [ Vault, SkyBeeCore ]
 authors: [ Hakuyamu ]
+
+commands:
+  spawner:
+    description: spawner command

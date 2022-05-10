@@ -14,8 +14,8 @@ public class Utils {
 
     public static byte @NotNull [] uuidToBytes(@NotNull UUID uuid) {
         ByteBuffer buffer = ByteBuffer.allocate(16);
-        buffer.putLong(uuid.getLeastSignificantBits());
         buffer.putLong(uuid.getMostSignificantBits());
+        buffer.putLong(uuid.getLeastSignificantBits());
         return buffer.array();
     }
 
