@@ -6,6 +6,7 @@ import de.leonheuer.mcguiapi.gui.GUIPattern;
 import de.leonheuer.mcguiapi.utils.ItemBuilder;
 import de.leonheuer.skycave.upgradespawners.UpgradeSpawners;
 import de.leonheuer.skycave.upgradespawners.enums.Message;
+import de.leonheuer.skycave.upgradespawners.enums.Upgrade;
 import de.leonheuer.skycave.upgradespawners.models.Spawner;
 import org.bson.conversions.Bson;
 import org.bukkit.Bukkit;
@@ -19,6 +20,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
 
 public class PlayerInteractListener implements Listener {
 
@@ -58,16 +61,37 @@ public class PlayerInteractListener implements Listener {
                 .withMaterial('b', ItemBuilder.of(Material.BLACK_STAINED_GLASS_PANE).name("§0").asItem())
                 .withMaterial('_', null)
                 .startAtLine(1);
-        main.getGuiFactory().createGUI(3, "§6§lLevelbarer Spawner")
-                .formatPattern(pattern)
-                .setItem(2, 2, ItemBuilder.of(Material.BLAZE_POWDER)
-                        .name("&6Treibstoff")
-                        .description("&7Verbleibende Zeit: &b" + spawner.getFuelSeconds() + " Sek.").asItem())
+
+        GUI gui = main.getGuiFactory().createGUI(3, "§6§lLevelbarer Spawner")
+                .formatPattern(pattern);
+
+        gui.setItem(2, 2, ItemBuilder.of(Material.BLAZE_POWDER)
+                                .name("&6Treibstoff")
+                                .description("&7Verbleibende Zeit: &b" + spawner.getFuelSeconds() + " Sek.").asItem(),
+                        e -> {
+                            // TODO add fuel
+                        })
                 .setItem(2, 3, ItemBuilder.of(spawner.getEntity().getIcon())
-                        .name("&6Entity: &e" + spawner.getEntity().getName()).asItem())
+                                .name("&6Entity: &e" + spawner.getEntity().getName()).asItem(),
+                        e -> {
+                            // TODO mob shop
+                        })
                 .setItem(2, 4, ItemBuilder.of(Material.IRON_SWORD)
-                        .name("&6Instant Kill: " + (spawner.isInstantKill() ? "&aan" : "&caus")).asItem())
-                .show(event.getPlayer());
+                                .name("&6Instant Kill: " + (spawner.isInstantKill() ? "&aan" : "&caus")).asItem(),
+                        e -> {
+                            spawner.setInstantKill(!spawner.isInstantKill());
+                            gui.setItem(2, 4, ItemBuilder.of(Material.IRON_SWORD)
+                                    .name("&6Instant Kill: " + (spawner.isInstantKill() ? "&aan" : "&caus")).asItem());
+                            main.getSpawners().replaceOne(filter, spawner);
+                        });
+
+        int column = 6;
+        for (Map.Entry<Upgrade, Integer> entry : spawner.getUpgrades().entrySet()) {
+            gui.setItem(2, column, ItemBuilder.of(entry.getKey().getIcon())
+                    .name("&a" + entry.getKey().getFriendlyName()).asItem());
+            column++;
+        }
+
         event.setCancelled(true);
         event.setUseInteractedBlock(Event.Result.DENY);
         event.setUseItemInHand(Event.Result.DENY);
