@@ -12,6 +12,7 @@ import de.leonheuer.skycave.upgradespawners.codecs.LocationCodec;
 import de.leonheuer.skycave.upgradespawners.codecs.SpawnerCodecProvider;
 import de.leonheuer.skycave.upgradespawners.codecs.UUIDCodec;
 import de.leonheuer.skycave.upgradespawners.commands.SpawnerCommand;
+import de.leonheuer.skycave.upgradespawners.enums.Upgrade;
 import de.leonheuer.skycave.upgradespawners.listeners.BlockBreakListener;
 import de.leonheuer.skycave.upgradespawners.listeners.BlockPlaceListener;
 import de.leonheuer.skycave.upgradespawners.listeners.PlayerInteractListener;
@@ -19,6 +20,10 @@ import de.leonheuer.skycave.upgradespawners.models.SkyCavePlugin;
 import de.leonheuer.skycave.upgradespawners.models.Spawner;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+
+import java.util.Collection;
 
 @Prefix("&6&lSpawner &8» ")
 @CreateDataFolder
@@ -53,6 +58,21 @@ public final class UpgradeSpawners extends SkyCavePlugin {
 
         // commands
         registerCommand("spawner", new SpawnerCommand());
+
+        getServer().getScheduler().runTaskTimer(this, () -> {
+            for (Spawner spawner : this.spawners.find()) {
+                Location loc = spawner.getLocation();
+                int radius = spawner.getUpgrades().get(Upgrade.RADIUS); // TODO get real radius
+                Collection<Player> players = loc.getNearbyEntitiesByType(Player.class, radius);
+                if (players.isEmpty()) continue;
+
+                int amount = spawner.getUpgrades().get(Upgrade.AMOUNT); // TODO get real amount
+                for (int i = 0; i < amount; i++) {
+                    // TODO random location
+                    loc.getWorld().spawnEntity(loc, spawner.getEntity().getType());
+                }
+            }
+        }, 0, 20 * 20);
     }
 
     @Override

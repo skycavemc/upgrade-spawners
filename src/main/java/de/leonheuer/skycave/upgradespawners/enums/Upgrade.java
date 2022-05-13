@@ -5,7 +5,7 @@ import org.bukkit.Material;
 public enum Upgrade {
 
     AMOUNT(Material.MINECART, "Anzahl"),
-    DISTANCE(Material.FIREWORK_ROCKET, "Aktivierungsradius"),
+    RADIUS(Material.FIREWORK_ROCKET, "Aktivierungsradius"),
     MAX_FUEL(Material.LAVA_BUCKET, "Treibstoff Speicher");
 
     private final Material icon;
