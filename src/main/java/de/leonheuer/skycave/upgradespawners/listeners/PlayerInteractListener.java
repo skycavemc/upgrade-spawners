@@ -87,8 +87,14 @@ public class PlayerInteractListener implements Listener {
 
         int column = 6;
         for (Map.Entry<Upgrade, Integer> entry : spawner.getUpgrades().entrySet()) {
+            int finalColumn = column;
             gui.setItem(2, column, ItemBuilder.of(entry.getKey().getIcon())
-                    .name("&a" + entry.getKey().getFriendlyName()).asItem());
+                            .name("&a" + entry.getKey().getFriendlyName()).asItem(),
+                    e -> {
+                        spawner.getUpgrades().put(entry.getKey(), entry.getValue() + 1);
+                        gui.setItem(2, finalColumn, ItemBuilder.of(entry.getKey().getIcon())
+                                .name("&a" + entry.getKey().getFriendlyName()).asItem());
+                    });
             column++;
         }
 
